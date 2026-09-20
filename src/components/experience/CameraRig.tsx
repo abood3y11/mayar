@@ -3,7 +3,6 @@
 import { useMemo, useRef } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
-import { layoutMemory, memories } from "@/data/memories";
 import { frameState as fs } from "@/lib/frame-state";
 import { heartbeat } from "@/lib/heartbeat";
 import { visualState as v } from "@/lib/visual-state";
@@ -66,8 +65,8 @@ export function CameraRig() {
       // at the heart's centre, looking into the red space
       target.set(px * 0.25 * motion, py * 0.15 * motion, 0.3);
       look.set(px * 1.3 * motion, py * 0.8 * motion, -6);
-      if (v.focusIndex >= 0 && v.focus > 0.001) {
-        const p = layoutMemory(memories[v.focusIndex], aspect < 1 ? 0.5 : 1.5);
+      if (v.focus > 0.001) {
+        const p = v.focusPos;
         focusLook.set(p[0], p[1], p[2]);
         // stand between the origin and the memory, a little in front of it
         focusPos.copy(focusLook).multiplyScalar(1 - 1.9 / focusLook.length());

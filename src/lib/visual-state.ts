@@ -47,8 +47,12 @@ export const visualState = {
   },
   /** 0 outside … 1 inside the heart (memory world) */
   inside: 0,
-  /** memory the camera is moving toward, -1 none */
+  /** word card the camera is moving toward, -1 none */
   focusIndex: -1,
+  /** photo the camera is moving toward, -1 none */
+  photoIndex: -1,
+  /** where the focused thing is (world), for the camera */
+  focusPos: [0, 0, -5] as [number, number, number],
   /** 0 … 1 camera focus progress */
   focus: 0,
 };

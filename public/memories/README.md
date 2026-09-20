@@ -1,11 +1,16 @@
-# Memories
+# الصور
 
-Put three photos here:
+الكلمات الثلاث (نضجك، صدقك، طفوليتك) بطاقات كلام، ما تحتاج صور.
 
-- `01.jpg` — نضجك
-- `02.jpg` — صدقك
-- `03.jpg` — طفوليتك
+الصور مجموعة مستقلة تطوف جوّا القلب، كل وحدة مربوطة بخيط للمنتصف:
 
-Recommended: 1200px on the long side, JPEG, under 400 KB each. Any aspect ratio works.
-Until a file exists, the card shows the word instead. Words, lines and positions live in
-`src/data/memories.ts`.
+1. حط الصور في `public/memories/photos/` بأي أسماء (مثلًا `01.jpg`، `02.jpg`…).
+2. ضيف كل صورة في القائمة `photos` داخل `src/data/memories.ts`، مع جملة قصيرة اختيارية
+   تظهر لمن تلمسها:
+
+   ```ts
+   { image: "/memories/photos/09.jpg", caption: "أول مرة ضحكتي كذا." },
+   ```
+
+أي عدد يمشي. المواقع تتوزع لحالها. المقاس المقترح: 1200px على الضلع الطويل، JPEG،
+أقل من 400 KB لكل صورة. لو ملف ناقص تظهر بطاقة ناعمة بدال الصورة.

@@ -118,23 +118,43 @@ export const director = {
       .to(v, { heartOpacity: 0, duration: 0.9, ease: "power2.in" }, 2.5)
       .to(v, { flash: 1, duration: 0.55, ease: "power2.in" }, 2.85)
       .add(() => {
-        Object.assign(v, { inside: 1, aura: 0, warmth: 0, bgDepth: 0.8, dust: 0.2, camDistMul: 1.35, sway: 1, focus: 0, focusIndex: -1 });
+        Object.assign(v, { inside: 1, aura: 0, warmth: 0, bgDepth: 0.8, dust: 0.2, camDistMul: 1.35, sway: 1, focus: 0, focusIndex: -1, photoIndex: -1 });
       }, 3.4)
       .to(v, { flash: 0, duration: 1.8, ease: "power2.out" }, 3.5);
   },
 
-  /** inside — approach a memory */
-  focusMemory(index: number) {
+  /** inside — approach a word card */
+  focusMemory(index: number, position: [number, number, number]) {
     v.focusIndex = index;
+    v.photoIndex = -1;
+    v.focusPos = position;
     fs.excitation = 0.6;
     gsap.killTweensOf(v, "focus");
     gsap.to(v, { focus: 1, duration: 2.2, ease: EASE });
   },
 
-  /** inside — back to the constellation */
-  unfocusMemory() {
+  /** inside — approach a photo */
+  focusPhoto(index: number, position: [number, number, number]) {
+    v.photoIndex = index;
+    v.focusIndex = -1;
+    v.focusPos = position;
+    fs.excitation = 0.4;
     gsap.killTweensOf(v, "focus");
-    gsap.to(v, { focus: 0, duration: 1.8, ease: EASE });
+    gsap.to(v, { focus: 1, duration: 1.8, ease: EASE });
+  },
+
+  /** inside — back to the constellation */
+  unfocus() {
+    gsap.killTweensOf(v, "focus");
+    gsap.to(v, {
+      focus: 0,
+      duration: 1.6,
+      ease: EASE,
+      onComplete: () => {
+        v.focusIndex = -1;
+        v.photoIndex = -1;
+      },
+    });
   },
 
   /** 10 — the world quiets; only the heart remains. */
@@ -143,7 +163,7 @@ export const director = {
     const tl = gsap.timeline();
     tl.to(v, { inside: 0, duration: 3, ease: EASE }, 0)
       .add(() => {
-        Object.assign(v, { camDistMul: 1.4, heartY: 0, scale: 1, focus: 0, focusIndex: -1 });
+        Object.assign(v, { camDistMul: 1.4, heartY: 0, scale: 1, focus: 0, focusIndex: -1, photoIndex: -1 });
       }, 1.4)
       .to(v, { heartOpacity: 1, aura: 0.35, light: 0.7, dust: 0.18, bgDepth: 0.55, wake: 0.6, duration: 3.5, ease: EASE }, 2.2);
     if (audioEngine.enabled) audioEngine.setMusicLevel(experienceConfig.audio.musicVolume * 0.55, 4);

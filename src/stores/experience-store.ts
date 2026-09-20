@@ -24,9 +24,10 @@ interface ExperienceState {
   /** hold progress mirrored for the DOM, in 0.05 steps */
   holdProgress: number;
   holdDone: boolean;
-  /** memory flow: which memory is next, whether one is open */
+  /** memory flow: which word card is next, whether one is open, which photo is open (-1 none) */
   memoryIndex: number;
   memoryOpen: boolean;
+  photoOpen: number;
 
   setChapter: (chapter: Chapter) => void;
   setAudioMode: (mode: AudioMode) => void;
@@ -39,6 +40,7 @@ interface ExperienceState {
   setHold: (progress: number, done: boolean) => void;
   setMemoryIndex: (i: number) => void;
   setMemoryOpen: (open: boolean) => void;
+  setPhotoOpen: (i: number) => void;
 }
 
 export const useExperienceStore = create<ExperienceState>()((set) => ({
@@ -54,6 +56,7 @@ export const useExperienceStore = create<ExperienceState>()((set) => ({
   holdDone: false,
   memoryIndex: -1,
   memoryOpen: false,
+  photoOpen: -1,
 
   setChapter: (chapter) => set({ chapter }),
   setAudioMode: (audioMode) => set({ audioMode }),
@@ -67,4 +70,5 @@ export const useExperienceStore = create<ExperienceState>()((set) => ({
     set((s) => (s.holdProgress === holdProgress && s.holdDone === holdDone ? s : { holdProgress, holdDone })),
   setMemoryIndex: (memoryIndex) => set({ memoryIndex }),
   setMemoryOpen: (memoryOpen) => set({ memoryOpen }),
+  setPhotoOpen: (photoOpen) => set({ photoOpen }),
 }));

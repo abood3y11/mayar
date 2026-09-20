@@ -147,6 +147,12 @@ body {
   opacity: 0.92;
 }
 
+/* a photo's short caption */
+.caption {
+  font-size: clamp(1rem, 0.9rem + 0.8vw, 1.3rem);
+  opacity: 0.9;
+}
+
 /* portrait phones: the heart sits higher, text a little lower */
 @media (max-aspect-ratio: 1/1) {
   .story-anchor {

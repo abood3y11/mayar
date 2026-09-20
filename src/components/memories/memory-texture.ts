@@ -1,11 +1,8 @@
 import * as THREE from "three";
 import { palette } from "@/config/palette";
-import type { Memory } from "@/data/memories";
+import type { Photo } from "@/data/memories";
 
-/** A warm card with the word on it — used until she has a real photo there. */
-export function makeWordTexture(word: string): THREE.CanvasTexture {
-  const W = 768;
-  const H = 512;
+function baseCard(W: number, H: number) {
   const canvas = document.createElement("canvas");
   canvas.width = W;
   canvas.height = H;
@@ -24,6 +21,16 @@ export function makeWordTexture(word: string): THREE.CanvasTexture {
     ctx.strokeStyle = "rgba(255, 214, 217, 0.28)";
     ctx.lineWidth = 3;
     ctx.strokeRect(22, 22, W - 44, H - 44);
+  }
+  return { canvas, ctx };
+}
+
+/** A warm card with the word on it — the three things he loves. */
+export function makeWordTexture(word: string): THREE.CanvasTexture {
+  const W = 768;
+  const H = 512;
+  const { canvas, ctx } = baseCard(W, H);
+  if (ctx) {
     const family = getComputedStyle(document.body).fontFamily;
     ctx.direction = "rtl";
     ctx.font = `600 150px ${family}`;
@@ -37,17 +44,34 @@ export function makeWordTexture(word: string): THREE.CanvasTexture {
   return texture;
 }
 
-/** Loads her photo; falls back to the word card when the file is missing. */
-export function loadMemoryTexture(memory: Memory): Promise<THREE.Texture> {
+/** A soft card used until a photo file exists at that path. */
+export function makePhotoPlaceholder(): THREE.CanvasTexture {
+  const W = 600;
+  const H = 450;
+  const { canvas, ctx } = baseCard(W, H);
+  if (ctx) {
+    ctx.font = "120px serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = "rgba(255, 214, 217, 0.35)";
+    ctx.fillText("♥", W / 2, H / 2 + 6);
+  }
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  return texture;
+}
+
+/** Loads a photo; falls back to the soft card when the file is missing. */
+export function loadPhotoTexture(photo: Photo): Promise<THREE.Texture> {
   return new Promise((resolve) => {
     new THREE.TextureLoader().load(
-      memory.image,
+      photo.image,
       (t) => {
         t.colorSpace = THREE.SRGBColorSpace;
         resolve(t);
       },
       undefined,
-      () => resolve(makeWordTexture(memory.word)),
+      () => resolve(makePhotoPlaceholder()),
     );
   });
 }

@@ -12,8 +12,10 @@ export const frameState = {
   touching: false,
   /** true while pressed on the heart (pointerdown … pointerup) */
   pressing: false,
-  /** dev diagnostics: what ended the last press, and when */
+  /** dev diagnostics: what ended the last press, and when; pointerdowns seen / accepted */
   lastRelease: "",
+  downEvents: 0,
+  heartHits: 0,
   /** 0 far … 1 touching, smoothed */
   proximity: 0,
   /** short-lived excitement after a touch, 1 → 0 over a few seconds */

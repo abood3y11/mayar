@@ -18,7 +18,7 @@ Stack: Next.js 16 (App Router, TS) · React Three Fiber 9 · drei · postprocess
 | 06 | PROXIMITY | BPM follows her hand; "قربي أكثر" | evenHere lines end |
 | 07 | HOLD | hold it; warmth = progress; "خليكِ… لسه شوي" | hold complete + lines |
 | 08 | ENTER | "تعالي أوريك حاجة" → camera dives through the surface (flash hides the cut) | timer |
-| 09 | MEMORIES | inside: nebula, three memories (نضجك، صدقك، طفوليتك), threads of light | afterMemories end |
+| 09 | MEMORIES | inside: nebula, three word cards (نضجك، صدقك، طفوليتك) the story walks through, plus any number of her photos floating around, every one tied to the core; tapping a photo brings it close (caption optional) | afterMemories end |
 | 10 | QUIET | world fades; only the heart remains | quietLines end |
 | 11 | LETTER | the letter, then the slow lines | slowLines end |
 | 12 | FINAL_HOLD | "حطي يدك عليه مرة أخيرة" → "يحبك." / "مرة." | beats end |
@@ -48,7 +48,7 @@ slows, dims and stops (7 s grace + 12 s fade). One press brings it back. See `sr
 
 ## Before sending it to her
 
-- photos in `public/memories/01.jpg … 03.jpg` (the cards fall back to the word until then)
+- photos in `public/memories/photos/` listed in `src/data/memories.ts` → `photos` (any count; soft cards until then)
 - optional licensed track at `public/audio/music.mp3` (starts with her first touch)
 - read every line in `src/config/experience.ts` once more in your own voice
 

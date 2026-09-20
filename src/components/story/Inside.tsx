@@ -2,31 +2,46 @@
 
 import { useEffect, useState } from "react";
 import { experienceConfig as C } from "@/config/experience";
-import { memories } from "@/data/memories";
-import { closeMemory, openMemory } from "@/lib/memory-flow";
+import { memories, photos } from "@/data/memories";
+import { closeMemory, closePhoto, openMemory } from "@/lib/memory-flow";
 import { useExperienceStore } from "@/stores/experience-store";
 import { Chapter } from "@/types/experience";
-import { StoryLines } from "./StoryLines";
+import { Line, StoryLines } from "./StoryLines";
 
-/** 09 — inside the heart: three things he loves, one memory at a time. */
+/** seconds a photo stays close before drifting back */
+const PHOTO_SECONDS = 6;
+
+/** 09 — inside the heart: three things he loves, one word at a time; her photos float around. */
 export function MemoriesStory() {
   const setChapter = useExperienceStore((s) => s.setChapter);
   const setMemoryIndex = useExperienceStore((s) => s.setMemoryIndex);
   const memoryIndex = useExperienceStore((s) => s.memoryIndex);
   const memoryOpen = useExperienceStore((s) => s.memoryOpen);
+  const photoOpen = useExperienceStore((s) => s.photoOpen);
   const [stage, setStage] = useState(0);
 
   const browsing = stage === 1 && memoryIndex >= 0 && memoryIndex < memories.length;
   const finished = stage === 1 && memoryIndex >= memories.length;
 
-  // if she does not touch the glowing memory, it opens by itself
+  // if she does not touch the glowing word, it opens by itself (not while she is looking at a photo)
   useEffect(() => {
-    if (!browsing || memoryOpen) return;
+    if (!browsing || memoryOpen || photoOpen >= 0) return;
     const id = window.setTimeout(() => openMemory(memoryIndex), C.enter.autoOpenSeconds * 1000);
     return () => window.clearTimeout(id);
-  }, [browsing, memoryOpen, memoryIndex]);
+  }, [browsing, memoryOpen, memoryIndex, photoOpen]);
+
+  // a photo drifts back on its own after a while
+  useEffect(() => {
+    if (photoOpen < 0) return;
+    const id = window.setTimeout(closePhoto, PHOTO_SECONDS * 1000);
+    return () => window.clearTimeout(id);
+  }, [photoOpen]);
+
+  // leaving the chapter closes whatever is open
+  useEffect(() => () => closePhoto(), []);
 
   const current = browsing && memoryOpen ? memories[memoryIndex] : null;
+  const caption = photoOpen >= 0 ? photos[photoOpen]?.caption : undefined;
 
   return (
     <>
@@ -42,6 +57,7 @@ export function MemoriesStory() {
       )}
       {current && <StoryLines key={current.id} lines={current.lines} startDelay={1.8} variant="low" onDone={closeMemory} />}
       {finished && <StoryLines lines={C.afterMemories} startDelay={1.6} onDone={() => setChapter(Chapter.QUIET)} />}
+      <Line show={!!caption && !memoryOpen} text={caption ?? ""} variant="low" className="caption" duration={1.2} />
     </>
   );
 }

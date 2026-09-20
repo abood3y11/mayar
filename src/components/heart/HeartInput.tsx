@@ -38,7 +38,9 @@ export function HeartInput() {
     };
 
     const onDown = (e: PointerEvent) => {
+      fs.downEvents += 1;
       if (e.button > 0 || !interactive() || !onHeart(e)) return;
+      fs.heartHits += 1;
       fs.pressing = true;
       fs.touching = true;
       fs.excitation = Math.max(fs.excitation, fs.holdEnabled ? 0.35 : 1);
